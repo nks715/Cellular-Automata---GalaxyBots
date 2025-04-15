@@ -5,7 +5,7 @@ import keyboard as slsf
 def dbg_print(msg, dlevel=0):
     if dlevel > 0:
         print(msg)
-matrix = np.zeros((10, 10))
+matrix = np.zeros((50, 50))
 
 fig, ax = plt.subplots()
 image = ax.imshow(matrix, cmap="gray", vmin=0, vmax=1)
@@ -40,17 +40,29 @@ def four_rules():
                 if ind-1 >=0:
                     if matrix_temp[ind-1][index] == 1:
                         count +=1
+                if ind-1 >=0 and index-1 >=0:
+                    if matrix_temp[ind-1][index-1] == 1:
+                        count +=1
+                if ind-1 >=0 and index+1 <=49:
+                    if matrix_temp[ind-1][index+1] == 1:
+                        count +=1
                 #print(ind, index)
-                if ind+1<=9:
+                if ind+1<=49:
                     if matrix_temp[ind+1][index] == 1:
                         count +=1
                 #print(ind, index)
-                if index+1 <=9:
+                if index+1 <=49:
                     if matrix_temp[ind][index+1] == 1:
                         count +=1
                 #print(ind, index)
                 if index-1 >=0:
                     if matrix_temp[ind][index-1] == 1:
+                        count +=1
+                if ind+1 <49 and index-1 >=0:
+                    if matrix_temp[ind+1][index-1] == 1:
+                        count +=1
+                if ind+1 <=49 and index+1 <=49:
+                    if matrix_temp[ind+1][index+1] == 1:
                         count +=1
                 #print(ind, index)
                 #Reproduction
@@ -58,7 +70,7 @@ def four_rules():
                     dbg_print("Reproduction" + str(ind) + str(index), 1)
                     matrix[ind][index] = 1
                 #Overpopulation
-                if count == 4 and matrix_temp[ind][index] != 0:
+                if count > 3 and matrix_temp[ind][index] != 0:
                     dbg_print("Overpopulation" + str(ind) + str(index), 1)
                     matrix[ind][index] = 0
                 #Underpopulation
@@ -68,7 +80,7 @@ def four_rules():
                 #print(ind, index)
     image.set_data(matrix)
     plt.draw()
-timer = fig.canvas.new_timer(interval=125)
+timer = fig.canvas.new_timer(interval=75)
 timer.add_callback(four_rules)
 timer.start()
 cid = fig.canvas.mpl_connect("button_press_event", onpress)
